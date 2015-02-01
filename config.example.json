@@ -6,7 +6,7 @@
 		"disclose_addresses": true,
 		"ping": true,
 		"on_error": {
-			"webhook": [ "http://localhost/some-webhook" ],
+			"webhook": [ "http://localhost/some-webhook?server={server}&ip={ip}&service={service}&status={status}" ],
 			"email": [ "admin1@localhost", "admin2@localhost" ]
 		},
 		"services": [
