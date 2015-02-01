@@ -57,6 +57,8 @@
 						<% if (config[i].ipv6 !== false) { %>
 							<% if (status[i].services[n].ipv4 == "up"){ %>
 								<span class="label label-success">Up</span>
+							<% } else if (status[i].services[n].ipv4 == "timeout") { %>
+								<span class="label label-warning">Timeout</span>
 							<% } else { %>
 								<span class="label label-danger">Down</span>
 							<% } %>
@@ -65,6 +67,8 @@
 						<% if (config[i].ipv6 !== false) { %>
 							<% if (status[i].services[n].ipv6 == "up"){ %>
 								<span class="label label-success">Up</span>
+							<% } else if (status[i].services[n].ipv6 == "timeout") { %>
+								<span class="label label-warning">Timeout</span>
 							<% } else { %>
 								<span class="label label-danger">Down</span>
 							<% } %>
