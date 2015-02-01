@@ -128,6 +128,6 @@ app.get('/', function (req, res) {
 })
 
 var server = app.listen(process.env.PORT || 3000, function () {
-	update();
+	setInterval(update(), 1000*60*5); // 5 minutes
 	console.log('App listening at http://%s:%s', server.address().address, server.address().port);
 })
