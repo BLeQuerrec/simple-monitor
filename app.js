@@ -43,8 +43,8 @@ var update = function(){
 
 		if (config[i].ping === true){
 			if (config[i].ipv4 !== false){
-				require('child_process').exec('ping -c 1 -w 1 "'+config[i].ipv4.replace('"', '\\"'), function(err, stdout){
-					if (stdout.indexOf('  0% packet loss') < 0){
+				require('child_process').exec('ping -c 1 -w 1 "'+config[i].ipv4.replace('"', '\\"')+'"', function(err, stdout){
+					if (stdout.indexOf(' 0% packet loss') < 0){
 						writeCache(i, "ping.ipv4", "down");
 					}
 					else {
@@ -53,8 +53,8 @@ var update = function(){
 				});
 			}
 			if (config[i].ipv6 !== false){
-				require('child_process').exec('ping6 -c 1 -w 1 "'+config[i].ipv6.replace('"', '\\"'), function(err, stdout){
-					if (stdout.indexOf('  0% packet loss') < 0){
+				require('child_process').exec('ping6 -c 1 -w 1 "'+config[i].ipv6.replace('"', '\\"')+'"', function(err, stdout){
+					if (stdout.indexOf(' 0% packet loss') < 0){
 						writeCache(i, "ping.ipv6", "down");
 					}
 					else {
