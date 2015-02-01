@@ -1,6 +1,7 @@
 var express = require('express'),
 	fs = require('fs'),
-	net = require('net');
+	net = require('net'),
+	async = require('async');
 
 if (fs.existsSync('./config.json')) {
 	var config = require('./config.json');
@@ -31,7 +32,7 @@ var writeCache = function(serverID, test, status){
 }
 
 var update = function(){
-	var client = ["ipv4", "ipv6"];
+	var client = [];
 
 	client.ipv4 = new Array(config.length);
 	client.ipv6 = new Array(config.length);
@@ -62,39 +63,41 @@ var update = function(){
 				});
 			}
 		}
-		for (var n in config[i].services){
-			if (config[i].ipv4 !== false){
-				client.ipv4[i][n] = net.connect({host: config[i].ipv4, port: config[i].services[n].port});
-				client.ipv4[i][n].setTimeout(2000);
-				client.ipv4[i][n].on('connect', function() {
-					writeCache(i, config[i].services[n].name+".ipv4", "up");
-					client.ipv4[i][n].end();
+		if (config[i].ipv4 !== false){
+			async.each(config[i].services, function(service, callback){
+				var client = net.connect({host: config[i].ipv4, port: service.port});
+				client.setTimeout(2000);
+				client.on('connect', function() {
+					writeCache(i, service.name+".ipv4", "up");
+					client.end();
 				});
-				client.ipv4[i][n].on('timeout', function() {
-					writeCache(i, config[i].services[n].name+".ipv4", "timeout");
-					client.ipv4[i][n].end();
+				client.on('timeout', function() {
+					writeCache(i, service.name+".ipv4", "timeout");
+					client.end();
 				});
-				client.ipv4[i][n].on('error', function(err) {
-					writeCache(i, config[i].services[n].name+".ipv4", "down");
-					client.ipv4[i][n].end();
+				client.on('error', function(err) {
+					writeCache(i, service.name+".ipv4", "down");
+					client.end();
 				});
-			}
-			if (config[i].ipv6 !== false){
-				client.ipv6[i][n] = net.connect({host: config[i].ipv6, port: config[i].services[n].port});
-				client.ipv6[i][n].setTimeout(2000);
-				client.ipv6[i][n].on('connect', function() {
-					writeCache(i, config[i].services[n].name+".ipv6", "up");
-					client.ipv6[i][n].end();
+			});
+		}
+		if (config[i].ipv6 !== false){
+			async.each(config[i].services, function(service, callback){
+				var client = net.connect({host: config[i].ipv6, port: service.port});
+				client.setTimeout(2000);
+				client.on('connect', function() {
+					writeCache(i, service.name+".ipv6", "up");
+					client.end();
 				});
-				client.ipv6[i][n].on('timeout', function() {
-					writeCache(i, config[i].services[n].name+".ipv6", "timeout");
-					client.ipv6[i][n].end();
+				client.on('timeout', function() {
+					writeCache(i, service.name+".ipv6", "timeout");
+					client.end();
 				});
-				client.ipv6[i][n].on('error', function(err) {
-					writeCache(i, config[i].services[n].name+".ipv6", "down");
-					client.ipv6[i][n].end();
+				client.on('error', function(err) {
+					writeCache(i, service.name+".ipv6", "down");
+					client.end();
 				});
-			}
+			});
 		}
 	}
 };
