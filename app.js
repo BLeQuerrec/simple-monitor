@@ -126,7 +126,7 @@ var get = function(){
 
 var parseHooks = function(server, ip, service, status){
 	config[server].on_error.webhook.forEach(function(entry) {
-		var webhook = entry.replace('{server}', server.name).replace('{ip}', ip).replace('{service}', service.name).replace('{status}', status);
+		var webhook = entry.replace('{server}', server.name).replace('{ip}', ip).replace('{service}', service).replace('{status}', status);
 		request.get(webhook).on('error', function(err){
 			console.log('Cannot execute webhook', webhook, err);
 		});
@@ -151,13 +151,13 @@ var hooks = function(){
 			if (config[i].ipv4 !== false){
 				var status = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv4", "utf8");
 				if (status != "up"){
-					parseHooks(i, "ipv4", config[i].services[n], status);
+					parseHooks(i, "ipv4", config[i].services[n].name, status);
 				}
 			}
 			if (config[i].ipv6 !== false){
 				var status = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv6", "utf8");
 				if (status != "up"){
-					parseHooks(i, "ipv6", config[i].services[n], status);
+					parseHooks(i, "ipv6", config[i].services[n].name, status);
 				}
 			}
 		}
