@@ -2,7 +2,9 @@ var express = require('express'),
 	fs = require('fs'),
 	net = require('net'),
 	async = require('async'),
-	request = require('request');
+	request = require('request'),
+	nodemailer = require('nodemailer'),
+	smtpTransport = require('nodemailer-smtp-transport');
 
 if (fs.existsSync('./config.json')) {
 	var config = require('./config.json');
@@ -28,6 +30,14 @@ for (var i in config){
 			process.exit(1);
 		}
 	}
+}
+
+if (process.env.SMTP_HOSTNAME === undefined || process.env.SMTP_USERNAME === undefined || process.env.SMTP_PASSWORD === undefined || process.env.SMTP_FROM === undefined){
+	console.log("Warning: email hook is not configured.");
+	var email = false;
+}
+else {
+	var email = true;
 }
 
 var writeCache = function(serverID, test, status){
@@ -131,6 +141,26 @@ var parseHooks = function(server, ip, service, status){
 			console.log('Cannot execute webhook', webhook, err);
 		});
 	});
+	if (email === true){
+		config[server].on_error.email.forEach(function(entry) {
+			nodemailer.createTransport(smtpTransport({
+				host: process.env.SMTP_HOSTNAME,
+				port: process.env.SMTP_PORT || 25,
+				auth: {
+					user: process.env.SMTP_USERNAME,
+					pass: process.env.SMTP_PASSWORD
+				},
+				maxConnections: 5
+			})).sendMail({
+				from: process.env.SMTP_FROM,
+				to: entry,
+				subject: "[ALERT] Error on "+config[server].name,
+				text: "Hi,\n\nThe following service is down:\n\nServer: "+config[server].name+" ("+ip+")\nService: "+service+"\nStatus: "+status+"\n\n---\nThe bot."
+			}, function(err){
+				if(err) console.log('Cannot send email to '+entry+':', err);
+			});
+		});
+	}
 };
 
 var hooks = function(){

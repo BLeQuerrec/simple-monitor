@@ -5,7 +5,7 @@ A simple app to monitor online services.
 Just clone this repository, copy `config.example.json` to `config.json`, edit this file and start the application with npm:
 
 ```
-PORT=3000 npm start
+PORT=3000 SMTP_HOSTNAME="localhost" SMTP_USERNAME="username" SMTP_PASSWORD="password" SMTP_FROM="alert@example.org" SMTP_SUBJECT="Alert!" npm start
 ```
 
 ## Requirements
