@@ -41,7 +41,7 @@ else {
 }
 
 var writeCache = function(serverID, test, status){
-	fs.writeFile("cache/cache."+serverID+"."+test, status, function(err) {});
+	fs.writeFile("cache/cache."+config[serverID].name+"."+test, status, function(err) {});
 }
 
 var update = function(){
@@ -120,13 +120,13 @@ var get = function(){
 	for (var i in config){
 		var server = {ping: {}, services: []};
 		if (config[i].ping === true){
-			if (config[i].ipv4 !== false) server.ping.ipv4 = fs.readFileSync("cache/cache."+i+".ping.ipv4", "utf8");
-			if (config[i].ipv6 !== false) server.ping.ipv6 = fs.readFileSync("cache/cache."+i+".ping.ipv6", "utf8");
+			if (config[i].ipv4 !== false) server.ping.ipv4 = fs.readFileSync("cache/cache."+config[i].name+".ping.ipv4", "utf8");
+			if (config[i].ipv6 !== false) server.ping.ipv6 = fs.readFileSync("cache/cache."+config[i].name+".ping.ipv6", "utf8");
 		}
 		for (var n in config[i].services){
 			var service = [];
-			if (config[i].ipv4 !== false) service.ipv4 = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv4", "utf8");
-			if (config[i].ipv6 !== false) service.ipv6 = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv6", "utf8");
+			if (config[i].ipv4 !== false) service.ipv4 = fs.readFileSync("cache/cache."+config[i].name+"."+config[i].services[n].name+".ipv4", "utf8");
+			if (config[i].ipv6 !== false) service.ipv6 = fs.readFileSync("cache/cache."+config[i].name+"."+config[i].services[n].name+".ipv6", "utf8");
 			server.services.push(service);
 		}
 		status.push(server);
@@ -167,25 +167,25 @@ var hooks = function(){
 	for (var i in config){
 		if (config[i].ping === true){
 			if (config[i].ipv4 !== false){
-				if (fs.readFileSync("cache/cache."+i+".ping.ipv4", "utf8") == "down"){
+				if (fs.readFileSync("cache/cache."+config[i].name+".ping.ipv4", "utf8") == "down"){
 					parseHooks(i, "ipv4", "ping", "down");
 				}
 			}
 			if (config[i].ipv6 !== false){
-				if (fs.readFileSync("cache/cache."+i+".ping.ipv6", "utf8") == "down"){
+				if (fs.readFileSync("cache/cache."+config[i].name+".ping.ipv6", "utf8") == "down"){
 					parseHooks(i, "ipv6", "ping", "down");
 				}
 			}
 		}
 		for (var n in config[i].services){
 			if (config[i].ipv4 !== false){
-				var status = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv4", "utf8");
+				var status = fs.readFileSync("cache/cache."+config[i].name+"."+config[i].services[n].name+".ipv4", "utf8");
 				if (status != "up"){
 					parseHooks(i, "ipv4", config[i].services[n].name, status);
 				}
 			}
 			if (config[i].ipv6 !== false){
-				var status = fs.readFileSync("cache/cache."+i+"."+config[i].services[n].name+".ipv6", "utf8");
+				var status = fs.readFileSync("cache/cache."+config[i].name+"."+config[i].services[n].name+".ipv6", "utf8");
 				if (status != "up"){
 					parseHooks(i, "ipv6", config[i].services[n].name, status);
 				}
@@ -205,10 +205,14 @@ app.get('/', function (req, res) {
 
 var server = app.listen(process.env.PORT || 3000, function () {
 	update();
-	hooks();
+	setTimeout(function(){
+		hooks();
+	}, 5000); // 5 seconds
 	setInterval(function(){
 		update();
-		hooks();
+		setTimeout(function(){
+			hooks();
+		}, 5000); // 5 seconds
 	}, 1000*60*5); // 5 minutes
 	console.log('App listening at http://%s:%s', server.address().address, server.address().port);
 })
