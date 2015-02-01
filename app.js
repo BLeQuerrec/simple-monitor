@@ -45,15 +45,7 @@ var writeCache = function(serverID, test, status){
 }
 
 var update = function(){
-	var client = [];
-
-	client.ipv4 = new Array(config.length);
-	client.ipv6 = new Array(config.length);
-
 	for (var i in config){
-		client.ipv4[i] = new Array(config[i].services.length);
-		client.ipv6[i] = new Array(config[i].services.length);
-
 		if (config[i].ping === true){
 			if (config[i].ipv4 !== false){
 				require('child_process').exec('ping -c 1 -w 1 "'+config[i].ipv4.replace('"', '\\"')+'"', function(err, stdout){
