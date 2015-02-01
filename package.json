@@ -1,0 +1,24 @@
+{
+  "name": "simple-monitor",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A simple app to monitor online services.",
+  "scripts": {
+    "start": "bash ./start.sh"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://git.nuolezio.org/bastien/simple-monitor.git"
+  },
+  "author": "Bastien Le Querrec",
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.1",
+    "ejs": "^2.1.4",
+    "express": "^4.11.0"
+  }
+}

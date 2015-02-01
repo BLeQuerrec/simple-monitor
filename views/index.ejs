@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Monitor</title>
+
+	<link href="/css/bootstrap.css" rel="stylesheet">
+	<link href="/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="header">
+			<h3 class="text-muted">Status</h3>
+		</div>
+
+		<div class="row">
+			<% for (var i in config){ %>
+			<div class="col-lg-6">
+				<h4>
+					<%= config[i].name %>
+					<% if (config[i].disclose_addresses === true){ %>
+						(<% if (config[i].ipv4 !== false) { %><%= config[i].ipv4 %><% } %>
+						<% if (config[i].ipv4 !== false && config[i].ipv6 !== false) { %> / <% } %>
+						<% if (config[i].ipv6 !== false) { %><%= config[i].ipv6 %><% } %>)
+					<% } %>
+				</h4>
+				<div class="ping">
+					<% if (config[i].ping === true){ %>
+						<% if (config[i].ipv6 !== false) { %>
+							<% if (status[i].ping.ipv4 == "up"){ %>
+								<span class="label label-success">Up</span>
+							<% } else { %>
+								<span class="label label-danger">Down</span>
+							<% } %>
+						<% } %>
+						<% if (config[i].ipv4 !== false && config[i].ipv6 !== false) { %> / <% } %>
+						<% if (config[i].ipv6 !== false) { %>
+							<% if (status[i].ping.ipv6 == "up"){ %>
+								<span class="label label-success">Up</span>
+							<% } else { %>
+								<span class="label label-danger">Down</span>
+							<% } %>
+						<% } %>
+					<% } %>
+				</div>
+
+				<% for (var n in config[i].services){ %>
+					<p>
+						<%= config[i].services[n].name %>:
+						<% if (config[i].ipv6 !== false) { %>
+							<% if (status[i].services[n].ipv4 == "up"){ %>
+								<span class="label label-success">Up</span>
+							<% } else { %>
+								<span class="label label-danger">Down</span>
+							<% } %>
+						<% } %>
+						<% if (config[i].ipv4 !== false && config[i].ipv6 !== false) { %> / <% } %>
+						<% if (config[i].ipv6 !== false) { %>
+							<% if (status[i].services[n].ipv6 == "up"){ %>
+								<span class="label label-success">Up</span>
+							<% } else { %>
+								<span class="label label-danger">Down</span>
+							<% } %>
+						<% } %>
+					</p>
+				<% } %>
+			</div>
+			<% } %>
+
+		</div>
+	</div>
+</body>
+</html>
