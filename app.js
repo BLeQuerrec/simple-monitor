@@ -126,7 +126,7 @@ var get = function(){
 
 var parseHooks = function(server, ip, service, status){
 	config[server].on_error.webhook.forEach(function(entry) {
-		var webhook = entry.replace('{server}', server.name).replace('{ip}', ip).replace('{service}', service).replace('{status}', status);
+		var webhook = entry.replace('{server}', config[server].name).replace('{ip}', ip).replace('{service}', service).replace('{status}', status);
 		request.get(webhook).on('error', function(err){
 			console.log('Cannot execute webhook', webhook, err);
 		});
