@@ -23,17 +23,10 @@
 		<div class="row">
 			<% for (var i in config){ %>
 			<div class="col-xs-12">
-				<h4>
-					<%= config[i].name %>
-					<% if (config[i].disclose_addresses === true){ %>
-						(<% if (config[i].ipv4 !== false) { %><%= config[i].ipv4 %><% } %>
-						<% if (config[i].ipv4 !== false && config[i].ipv6 !== false) { %> / <% } %>
-						<% if (config[i].ipv6 !== false) { %><%= config[i].ipv6 %><% } %>)
-					<% } %>
-				</h4>
+				<h4><%= config[i].name %><% if (config[i].disclose_addresses === true){ %> (<% if (config[i].ipv4 !== false) { %><%= config[i].ipv4 %><% } %><% if (config[i].ipv4 !== false && config[i].ipv6 !== false) { %> / <% } %><% if (config[i].ipv6 !== false) { %><%= config[i].ipv6 %><% } %>)<% } %></h4>
 				<% if (config[i].ping === true){ %>
 					<p>ping:
-						<% if (config[i].ipv6 !== false) { %>
+						<% if (config[i].ipv4 !== false) { %>
 							<% if (status[i].ping.ipv4 == "up"){ %>
 								<span class="label label-success">Up</span>
 							<% } else { %>
@@ -54,7 +47,7 @@
 				<% for (var n in config[i].services){ %>
 					<p>
 						<%= config[i].services[n].name %>:
-						<% if (config[i].ipv6 !== false) { %>
+						<% if (config[i].ipv4 !== false) { %>
 							<% if (status[i].services[n].ipv4 == "up"){ %>
 								<span class="label label-success">Up</span>
 							<% } else if (status[i].services[n].ipv4 == "timeout") { %>
