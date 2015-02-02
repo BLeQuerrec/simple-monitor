@@ -22,7 +22,7 @@
 
 		<div class="row">
 			<% for (var i in config){ %>
-			<div class="col-lg-6">
+			<div class="col-xs-12">
 				<h4>
 					<%= config[i].name %>
 					<% if (config[i].disclose_addresses === true){ %>
@@ -31,8 +31,8 @@
 						<% if (config[i].ipv6 !== false) { %><%= config[i].ipv6 %><% } %>)
 					<% } %>
 				</h4>
-				<div class="ping">
-					<% if (config[i].ping === true){ %>
+				<% if (config[i].ping === true){ %>
+					<p>ping:
 						<% if (config[i].ipv6 !== false) { %>
 							<% if (status[i].ping.ipv4 == "up"){ %>
 								<span class="label label-success">Up</span>
@@ -48,8 +48,8 @@
 								<span class="label label-danger">Down</span>
 							<% } %>
 						<% } %>
-					<% } %>
-				</div>
+					</p>
+				<% } %>
 
 				<% for (var n in config[i].services){ %>
 					<p>
