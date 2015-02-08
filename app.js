@@ -71,7 +71,7 @@ var update = function(){
 		if (server.ipv4 !== false){
 			async.each(server.services, function(service, callback){
 				var client = net.connect({host: server.ipv4, port: service.port});
-				client.setTimeout(3000);
+				client.setTimeout(server.timeout | 3000);
 				client.on('connect', function() {
 					writeCache(server.name, service.name+".ipv4", "up");
 					client.end();
@@ -89,7 +89,7 @@ var update = function(){
 		if (server.ipv6 !== false){
 			async.each(server.services, function(service, callback){
 				var client = net.connect({host: server.ipv6, port: service.port});
-				client.setTimeout(3000);
+				client.setTimeout(server.timeout | 3000);
 				client.on('connect', function() {
 					writeCache(server.name, service.name+".ipv6", "up");
 					client.end();

@@ -10,9 +10,9 @@
 			"email": [ "admin1@localhost", "admin2@localhost" ]
 		},
 		"services": [
-			{"name": "web", "port": 80},
-			{"name": "myself", "port": 3000},
-			{"name": "not-myself", "port": 2000}
+			{"name": "web", "port": 80, "timeout": 1000},
+			{"name": "myself", "port": 3000, "timeout": 10000},
+			{"name": "not-myself", "port": 2000, "timeout": 10000}
 		]
 	}
 ]
